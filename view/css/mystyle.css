@@ -1,0 +1,183 @@
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+.slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active below version 2.1.8 */ {
+    transform: translateX(10px);
+    opacity: 0;
+}
+
+.bounce-enter-active {
+    animation: bounce-in .5s;
+}
+.bounce-leave-active {
+    animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+body{
+    background:#f8f8f8;
+}
+
+.section-data h2{
+    text-align: center;
+    margin: 20px auto;
+    font-size:2rem;
+}
+
+.product-list{
+    text-align: center;
+}
+.product-list .offer{
+    font-size:0.80rem;
+    height: 56px;
+    padding-top: 7px;
+}
+.product-list .card-img {
+    width: 150px !important;
+    height:200px;
+    margin: auto auto;
+}
+.product-list:hover .card-img-overlay{
+    display: block;
+}
+.product-list .card-img-overlay{
+    display: none;
+    background: rgba(217,217,217,0.35);
+    padding-top: 50px;
+    width: 95%;
+    height: 95%;
+    margin: auto;
+}
+.product-list .card-title a{
+    color: #000;
+}
+.product-list .card-title a:hover{
+    color: #484848;
+    text-decoration: none;
+}
+.product-list .card-title,.product-list .price{
+    padding-top: 20px;
+}
+
+.profil{
+    background: #f9f9f9;
+}
+.profil .yacht-info__list li {
+    width:25%;
+}
+.olanaklar-kutu{
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    overflow: hidden;
+    float: left;
+    width: 100%;
+    margin: 15px 0px;
+}
+.olanaklar{
+    float: left;
+    width: 100%;
+    position: relative;
+    padding: 25px 30px 30px;
+}
+.margin-top--22{
+    margin-top:-22px;
+}
+.olanaklar-kutu h4{
+    color: #FF9800;
+}
+.yacht-info__list img{
+    width:20px;
+    padding-right:5px;
+}
+.yacht-info__list {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+}
+.yacht-info__list li {
+    padding: 6px 0;
+    font-size: 15px;
+    display: table;
+    height: 100%;
+    line-height: 21px;
+    float: left;
+    width: 50%;
+    margin-bottom: 5px;
+}
+
+
+
+
+/* Tree start*/
+
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding:10px 5px 0 5px;
+    position:relative
+}
+.tree li::before,
+.tree li::after {
+    content:'';
+    left:-20px;
+    position:absolute;
+    right:auto
+}
+.tree li::before {
+    border-left:2px solid #000;
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px
+}
+.tree li::after {
+    border-top:2px solid #000;
+    height:20px;
+    top:25px;
+    width:25px
+}
+.tree li span {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border:2px solid #000;
+    border-radius:3px;
+    display:inline-block;
+    padding:3px 8px;
+    text-decoration:none;
+    cursor:pointer;
+}
+.tree>ul>li::before,
+.tree>ul>li::after {
+    border:0
+}
+.tree li:last-child::before {
+    height:27px
+}
+.tree li span:hover {
+    background: hotpink;
+    border:2px solid #94a0b4;
+}
+
+[aria-expanded="false"] > .expanded,
+[aria-expanded="true"] > .collapsed {
+    display: none;
+}
+
+/* Tree End*/
