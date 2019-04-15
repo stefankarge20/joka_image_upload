@@ -10,3 +10,5 @@ CREATE TABLE `api_db`.`Images` ( `id` INT NOT NULL AUTO_INCREMENT , `productId` 
 ## Layout
 * CSS-Tree: https://bootsnipp.com/snippets/eNG7v
 * Search: https://github.com/twitter/typeahead.js/
+* Card: https://codepen.io/jstneg/pen/EVKYZj
+* typeahead: npm i vue-bootstrap-typeahead --save

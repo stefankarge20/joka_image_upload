@@ -1,7 +1,7 @@
+
 Vue.component('tree-item', {
     template: ' <li>' +
-        '            <div' +
-        '                    :class="{bold: isFolder}" @click="update">' +
+        '            <div class="{bold: isFolder}" @click="update">' +
         '                <a v-if="isCollection" href="#">{{ item.name }}</a>' +
         '                <span v-else>{{ item.name }}</span>' +
         '                <span v-if="isFolder">[{{ isOpen ? \'-\' : \'+\' }}]</span>' +
