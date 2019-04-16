@@ -14,7 +14,6 @@ class Collection{
         $this->conn = $db;
     }
 
-    // used by select drop-down list
     public function readAll(){
         $query = "SELECT id, name, category FROM " . $this->table_name . " ORDER BY name";
         $stmt = $this->conn->prepare( $query );
@@ -22,7 +21,6 @@ class Collection{
         return $stmt;
     }
 
-    // used by select drop-down list
     public function read(){
         $query = "SELECT  id, name, category  FROM " . $this->table_name . " ORDER BY name";
         $stmt = $this->conn->prepare( $query );
@@ -30,12 +28,13 @@ class Collection{
         return $stmt;
     }
 
-    // used by select drop-down list
-    public function readLineFromCategory($category){
+    public function readCollectionFromCategory($category){
         $query = "SELECT  id, name, category  FROM " . $this->table_name . " WHERE category =" . $category . "  ORDER BY name";
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
         return $stmt;
     }
+
+
 }
 ?>

@@ -438,110 +438,38 @@ body:before {
 }
 /*Background end*/
 
-/*TypeAhead start*/
 
-.datalist {
-    font-size:larger;
-}
-.typeahead, .tt-query, .tt-hint {
-    border: 2px solid #CCCCCC;
-    border-radius: 4px;
-    font-size: 16px; /* Set input font size */
-    font-weight:600;
-    height: 38px;
-    line-height: 30px;
-    outline: medium none;
-    padding: 8px 12px;
-}
-.typeahead {
-    background-color: #FFFFFF;
-}
-.typeahead:focus {
-    border: 2px solid #0097CF;
-}
 
-.tt-dropdown-menu {
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-.tt-query {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-}
-.tt-hint {
-    color: #999999;
-}
-.tt-open {
-    width: 622px;
-}
-
-.tt-suggestion {
-    font-size: 16px;  /* Set suggestion dropdown font size */
-    padding: 3px 20px;
-}
-.tt-suggestion:hover {
-    cursor: pointer;
-    background-color: #0097CF;
-    color: #FFFFFF;
-}
-.tt-cursor {
-    cursor: pointer;
-    background-color: #0097CF;
-    color: #FFFFFF;
-}
-.tt-suggestion p {
-    margin: 0;
-}
-
-.twitter-typeahead, .tt-hint, .tt-input, .tt-menu { width: 100%; }
-.tt-menu {
-    background-color: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    margin-top: 12px;
-    padding: 8px 0;
-    width: 100%;
-}
-.tt-error {
-    border: 2px solid #d9534f;
+.headline {
+    background: linear-gradient(-90deg, #063, #3c8a62, #063);
 }
 
 
-
-@-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
+/* Image upload start*/
+.image-preview-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0px;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
 }
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-
-
-.loader {
+.image-preview-input input[type=file] {
     position: absolute;
-    z-index: 1;
-    border: 12px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 12px solid #3498db;
-    width: 50px;
-    height: 50px;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }
-
-.loaderSearch{
-    left: 50%;
-    top: 50%;
-    width: 120px;
-    height: 120px;
-    border: 16px solid #f3f3f3;
-    border-top: 16px solid #3498db;
+.image-preview-input-title {
+    margin-left:2px;
 }
+/* Image upload end*/
 
-/*TypeAhead End*/
+
 
 

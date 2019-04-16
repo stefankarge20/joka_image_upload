@@ -21,7 +21,7 @@ $line = new Collection($db);
 $category = isset($_GET['category']) ? $_GET['category'] : die();
 
 // read the details of product to be edited
-$stmt = $line->readLineFromCategory($category);
+$stmt = $line->readCollectionFromCategory($category);
 
 $num = $stmt->rowCount();
 

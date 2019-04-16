@@ -9,6 +9,11 @@ CREATE TABLE `api_db`.`Images` ( `id` INT NOT NULL AUTO_INCREMENT , `productId` 
 
 ## Layout
 * CSS-Tree: https://bootsnipp.com/snippets/eNG7v
-* Search: https://github.com/twitter/typeahead.js/
 * Card: https://codepen.io/jstneg/pen/EVKYZj
-* typeahead: npm i vue-bootstrap-typeahead --save
+ 
+ 
+ # Image upload
+ * https://github.com/kartik-v/bootstrap-fileinput
+ * Configure The "php.ini" File 
+ ** First, ensure that PHP is configured to allow file uploads. 
+ ** In your "php.ini" file, search for the file_uploads directive, and set it to On:
