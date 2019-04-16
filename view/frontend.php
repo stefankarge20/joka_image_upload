@@ -68,9 +68,8 @@
                             Artikel: {{id}}
                         </div>
                         <h3>Weitere Bilder hochladen</h3>
-                        <form action="upload.php" method="post" enctype="multipart/form-data">
-                            <input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
-                            <input type="submit" value="Bild hochladen" name="submit" class="btn btn-success">
+                        <form action="/joka/api/image/upload.php" method="post" enctype="multipart/form-data" class="col-md-6">
+                            <input id="input-b1" name="fileToUpload" type="file" class="file" data-browse-on-zone-click="true">
                         </form>
 
                     </div>

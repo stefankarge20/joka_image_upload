@@ -991,7 +991,7 @@
             }
             if (opts.fallback !== false && typeof opts.fallback !== 'function') {
                 opts.fallback = function (s) {
-                    s._log('The browser does not support resumable or chunk uploads.');
+                    s._log('The browser does not support resumable or chunk tempDirectory.');
                     s.enableResumableUpload = false;
                 };
             }
@@ -1000,14 +1000,14 @@
                 return;
             }
             if (!self.uploadUrl && self.enableResumableUpload) {
-                self._log('The "uploadUrl" is not set. Ajax uploads and resumable uploads have been disabled.');
+                self._log('The "uploadUrl" is not set. Ajax tempDirectory and resumable tempDirectory have been disabled.');
                 self.enableResumableUpload = false;
                 return;
 
             }
             opts.chunkSize = parseFloat(opts.chunkSize);
             if (opts.chunkSize <= 0 || isNaN(opts.chunkSize)) {
-                self._log('Invalid "uploadResumableSize" (' + opts.chunkSize + '). Resumable uploads are disabled.');
+                self._log('Invalid "uploadResumableSize" (' + opts.chunkSize + '). Resumable tempDirectory are disabled.');
                 self.enableResumableUpload = false;
                 return;
             }

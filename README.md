@@ -1,18 +1,33 @@
 # joka_image_upload
 
-Example Project with VueJS
-
 ## Installation
-* Persistentce MySQL, DataBase="api_db", Username="api_db", Password="§%&ergsdg54"
+* Persistence MySQL, DataBase="api_db", Username="api_db", Password="§%&ergsdg54"
 
+### Dummy bzw. Testdaten 
 CREATE TABLE `api_db`.`Images` ( `id` INT NOT NULL AUTO_INCREMENT , `productId` INT NOT NULL , `imageName` VARCHAR(255) NOT NULL , `imageType` VARCHAR(255) NOT NULL , `image` BLOB NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+...
 
+## Projekt
+### Struktur
+* api (REST Schnittstelle und DB) Aufbau der Artikel entspricht einer Baumstruktur mit 1) Kategorie, 2) Kollektion) 3) Produkt 4) Bildern
+    * objects --> Klassen deren Instancen die Elemente darstellen 
+    * config --> Klasse zur Datenbankschnittstelle
+    * category --> REST-Schnitstelle und DB Zugriff für  Kategorie
+    * collection --> REST-Schnitstelle und DB Zugriff für Kollektion
+    * product --> REST-Schnitstelle und DB Zugriff für Produkt
+    * image --> REST-Schnitstelle und DB Zugriff
+    * controller --> Volltextsuche
+* view
+    * css --> Stylesheets + Icon
+    * header (JS/CSS importe + Headline),  frontend (Body), footer (import JS für eigene Lgik)
+    * javsscript (Vue-Componenten und Vue App)
+    
 ## Layout
 * CSS-Tree: https://bootsnipp.com/snippets/eNG7v
 * Card: https://codepen.io/jstneg/pen/EVKYZj
  
  
- # Image upload
+ ## Image upload
  * https://github.com/kartik-v/bootstrap-fileinput
  * Configure The "php.ini" File 
  ** First, ensure that PHP is configured to allow file uploads. 
