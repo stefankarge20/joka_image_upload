@@ -4,8 +4,7 @@
 * Persistence MySQL, DataBase="api_db", Username="api_db", Password="§%&ergsdg54"
 
 ### Dummy bzw. Testdaten 
-CREATE TABLE `api_db`.`Images` ( `id` INT NOT NULL AUTO_INCREMENT , `productId` INT NOT NULL , `imageName` VARCHAR(255) NOT NULL , `imageType` VARCHAR(255) NOT NULL , `image` BLOB NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
-...
+Eine Dummy-SQL Dump liegt im root Verzeichnis: api_db.sql
 
 ## Projekt
 ### Struktur

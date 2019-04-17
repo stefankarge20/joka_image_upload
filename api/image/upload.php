@@ -6,6 +6,7 @@ include_once '../objects/image.php';
 
 define ('SITE_ROOT', realpath(dirname(__FILE__)));
 $target_dir = SITE_ROOT.DIRECTORY_SEPARATOR."tempDirectory".DIRECTORY_SEPARATOR;
+$productId = $_POST["productId"];
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -45,7 +46,7 @@ if ($uploadOk == 0) {
         $database = new Database();
         $db = $database->getConnection();
         $image = new Image($db);
-        $image->resizeAndSave($target_file);
+        $image->resizeAndSave($target_file, $productId);
 //        header("Location: /joka/view/frontend.php");
         echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
     } else {

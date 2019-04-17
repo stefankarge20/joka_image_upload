@@ -51,7 +51,6 @@ Vue.component('tree-item', {
             }else{
                 this.selectedproducts.delete(this.item.productId);
             }
-            console.log("selectItem", this.selectedproducts);
 
         },
         addProductToCollection: function () {
@@ -69,14 +68,6 @@ Vue.component('tree-item', {
                 }
             }).catch(function (error) {
             });
-        },
-        getGlyphicon: function () {
-            if((this.item.type == "category" ||  this.item.type == "collection") && !this.isOpen){
-                return "glyphicon glyphicon-folder-close";
-            }
-            if((this.item.type == "category" ||  this.item.type == "collection") && this.isOpen){
-                return "glyphicon glyphicon-folder-open";
-            }
         }
     }
 });

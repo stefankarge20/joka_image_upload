@@ -14,13 +14,6 @@ class Collection{
         $this->conn = $db;
     }
 
-    public function readAll(){
-        $query = "SELECT id, name, category FROM " . $this->table_name . " ORDER BY name";
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-        return $stmt;
-    }
-
     public function read(){
         $query = "SELECT  id, name, category  FROM " . $this->table_name . " ORDER BY name";
         $stmt = $this->conn->prepare( $query );

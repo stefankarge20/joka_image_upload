@@ -3,11 +3,12 @@ const urlCategories = "/joka/api/category/read.php";
 const urlReadCategory = "/joka/api/collection/read_category.php";
 const urlCollectionArticles = "/joka/api/product/read_collections.php";
 const urlSearch = "/joka/api/controller/search.php";
+const urlImages = "/joka/api/image/read.php";
+const urlChangeImageUsage = "/joka/api/image/patch.php";
 
 new Vue({
     el: '#joka-demo',
     data: {
-        searchText: "Hallo Welt",
         articles: [],
         categories: [],
         categoryName: "",
@@ -16,7 +17,8 @@ new Vue({
         currentarticle: {},
         treeData: {},
         searchMatches: [],
-        selectedProducts: new Set()
+        selectedProducts: new Set(),
+        currentArticleImages: new Set(),
     },
     methods: {
         productSearchChange: function () {
@@ -45,22 +47,51 @@ new Vue({
             match.selected = !match.selected;
             if(match.selected){
                 this.selectedProducts.add(match.productId);
+                this.updatedArticleImages(match.productId)
             }else{
                 this.selectedProducts.delete(match.productId);
+                for (let item of this.currentArticleImages.keys()){
+                    if(item.productId == match.productId){
+                        this.currentArticleImages.delete(item);
+                    }
+                }
             }
+            console.log("selectRow-end", this.currentArticleImages);
         },
         editArticleImage: function () {
             console.log("Edit image", this.selectedProducts);
         },
+
+        updatedArticleImages: function (articleId) {
+            var url = urlImages+"?productId="+articleId;
+            var vm  = this;
+            axios.get(url).then(response => {
+                var images = response.data.images;
+                for(var key in images){
+                    var image = images[key];
+                    image.name = "/joka/uploads/"+image.name.replace("\\\\", "/");
+                    vm.currentArticleImages.add(image);
+                }
+            });
+        },
+        deleteImage: function (articleId, imageId) {
+            console.log("deleteImage", articleId, imageId);
+        },
+        changeImageUsage: function (articleId, imageId, usage) {
+            console.log("changeImageUsage", articleId, imageId, usage);
+            axios.patch(urlChangeImageUsage,{})
+                .then((response) => {
+                    console.log("changeImageUsage", response);
+                });
+        }
     },
     mounted() {
         var vm = this;
         axios.get(urlArticles).then(function (response) {
             vm.articles = response.data.records;
             vm.currentArticles = vm.articles;
-            // console.log("axios.urlArticles", JSON.stringify(vm.articles));
         }).catch(function (error) {
-            console.log("axios.error", error);
+            console.log("axios."+urlArticles, error);
         });
 
         axios.get(urlCategories).then(function (response) {
@@ -97,41 +128,6 @@ new Vue({
             }
         }).catch(function (error) {
             console.log("axios."+urlCategories, error);
-        });
-
-
-        $(document).on('change', '.btn-file :file', function() {
-            var input = $(this),
-                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-            input.trigger('fileselect', [label]);
-        });
-
-        $('.btn-file :file').on('fileselect', function(event, label) {
-
-            var input = $(this).parents('.input-group').find(':text'),
-                log = label;
-
-            if( input.length ) {
-                input.val(log);
-            } else {
-                if( log ) alert(log);
-            }
-
-        });
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#img-upload').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#imgInp").change(function(){
-            readURL(this);
         });
     }
 

@@ -58,19 +58,46 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="col-md-5">
                 <div class="card card-default" style="min-height: 600px">
                     <div class="card-header"><h3>Ausgewählte Bilder zu Artikel</h3></div>
                     <div class="card-body">
-                        <div v-for="id in selectedProducts">
-                            Artikel: {{id}}
+                        <div class="row" v-for="articleId in selectedProducts">
+                            <div class="col-md-12">
+                                Artikel: {{articleId}}
+                            </div>
+                            <div class="col-md-4" v-for="image in currentArticleImages">
+                                <div v-if="articleId==image.productId">
+                                    <div class="row border-top border-right border-left">
+                                        <div class="col-md-12">
+                                            <img v-bind:src="image.name" width="100%" height="300px"/>
+                                        </div>
+                                    </div>
+                                    <div class="row border-bottom border-right border-left">
+                                        <div class="col-md-10">
+                                            <select v-model="usage" class="form-control" style="height: 35px" @click="changeImageUsage(articleId, image.id, usage)">
+                                                <option>Frontbild</option>
+                                                <option>Text-Zeichnung</option>
+                                                <option>Verpackung</option>
+                                                <option>anderes</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-primary pull-right" @click="deleteImage(articleId, image.id)">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <h3>Weitere Bilder hochladen</h3>
                         <form action="/joka/api/image/upload.php" method="post" enctype="multipart/form-data" class="col-md-6">
                             <input id="input-b1" name="fileToUpload" type="file" class="file" data-browse-on-zone-click="true">
+                            <input name="productId" type="text" hidden="hidden" value="6">
+
                         </form>
+
 
                     </div>
                 </div>

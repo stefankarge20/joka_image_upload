@@ -332,7 +332,7 @@ ul {
     left: 0;
 }
 .card .card-body{ display: table; width: 100%; padding: 12px; }
-.card .card-header{ border-radius: 6px 6px 0 0; padding: 8px; }
+.card .card-header{ border-radius: 6px 6px 0 0; padding: 15px; }
 .card .card-footer{ border-radius: 0 0 6px 6px; padding: 8px; }
 .card .card-left{ position: relative; float: left; padding: 0 0 8px 0; }
 .card .card-right{ position: relative; float: left; padding: 8px 0 0 0; }
@@ -470,6 +470,9 @@ body:before {
 }
 /* Image upload end*/
 
+.imageThumbnail {
+    background: #777777;
+}
 
 
 
