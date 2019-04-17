@@ -5,6 +5,7 @@ const urlCollectionArticles = "/joka/api/product/read_collections.php";
 const urlSearch = "/joka/api/controller/search.php";
 const urlImages = "/joka/api/image/read.php";
 const urlChangeImageUsage = "/joka/api/image/patch.php";
+const urlDeleteImageUsage = "/joka/api/image/delete.php";
 
 new Vue({
     el: '#joka-demo',
@@ -18,7 +19,7 @@ new Vue({
         treeData: {},
         searchMatches: [],
         selectedProducts: new Set(),
-        currentArticleImages: new Set(),
+        currentArticleImages: new Set()
     },
     methods: {
         productSearchChange: function () {
@@ -74,15 +75,26 @@ new Vue({
                 }
             });
         },
-        deleteImage: function (articleId, imageId) {
-            console.log("deleteImage", articleId, imageId);
-        },
-        changeImageUsage: function (articleId, imageId, usage) {
-            console.log("changeImageUsage", articleId, imageId, usage);
-            axios.patch(urlChangeImageUsage,{})
+        deleteImage: function (image) {
+            let url = urlDeleteImageUsage + "?createdFromId="+image.createdFromId;
+            let vm = this;
+            axios.delete(url,{})
                 .then((response) => {
-                    console.log("changeImageUsage", response);
+                    alert("Bild erfolgreich gelöscht");
+                    console.log("delete", response);
+                    vm.currentArticleImages.delete(image);
+                }).catch(function (error) {
+                    alert("Bild konnt nicht gelöscht werden: " + JSON.stringify(error));
                 });
+        },
+        changeImageUsage: function (image) {
+            var url = urlChangeImageUsage + "?createdFromId="+image.createdFromId+"&usageFor="+image.usageFor;
+            axios.patch(url,{})
+                .then((response) => {
+                    alert("Bild-Nutzung erfolgreich zu " + image.usageFor + "gespeichert");
+                }).catch(function (error) {
+                alert("Fehler bei Bild-Nutzung änderzun zu " + image.usageFor + ": " + JSON.stringify(error));
+            });
         }
     },
     mounted() {

@@ -47,7 +47,7 @@ if ($uploadOk == 0) {
         $db = $database->getConnection();
         $image = new Image($db);
         $image->resizeAndSave($target_file, $productId);
-//        header("Location: /joka/view/frontend.php");
+        header("Location: /joka/view/index.php");
         echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
     } else {
         echo "Sorry, there was an error uploading your file.";

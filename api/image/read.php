@@ -27,7 +27,7 @@ if($num>0){
             "productId" => $productId,
             "name" => $name,
             "usageFor" => $usageFor,
-
+            "createdFromId" => $createdFromId,
         );
         array_push($line_arr["images"], $image_item);
     }

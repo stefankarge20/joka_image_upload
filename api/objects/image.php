@@ -11,43 +11,74 @@ class Image{
     public $productId;
     public $name;
     public $usageFor;
+    public $createdFromId;
 
     public function __construct($db){
         $this->conn = $db;
     }
 
     public function read($productId){
-        $query = "SELECT id, productId, name, usageFor FROM " . $this->table_name . " WHERE productId = :productId";
+        $query = "SELECT id, productId, name, usageFor, createdFromId FROM " . $this->table_name . " WHERE productId = :productId AND name like '%thumbnail%'";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':productId', $productId);
         $stmt->execute();
         return $stmt;
     }
 
-    public function update($imageId, $usageFor){
-        $query = "UPDATE " . $this->table_name . " SET usageFor = :usageFor WHERE id = :id";
+    public function update($createdFromId, $usageFor){
+        $query = "UPDATE " . $this->table_name . " SET usageFor = :usageFor WHERE createdFromId = :createdFromId";
         $stmt = $this->conn->prepare($query);
         $this->usageFor=htmlspecialchars(strip_tags($usageFor));
-        $this->id=htmlspecialchars(strip_tags($imageId));
+        $this->createdFromId=htmlspecialchars(strip_tags($createdFromId));
         $stmt->bindParam(':usageFor', $this->usageFor);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':createdFromId', $this->createdFromId);
         if($stmt->execute()){
             return true;
         }
         return false;
     }
 
-    // delete the product_image
-    function delete_image($imageId){
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+    public function deleteImage($createdFromId){
+        $this->deleteFromDisk($createdFromId);
+        $result = $this->deleteImageFromDB($createdFromId);
+        return $result;
+    }
+
+    function deleteFromDisk($createdFromId){
+        $query = "SELECT name FROM " . $this->table_name . " WHERE createdFromId = :createdFromId";
         $stmt = $this->conn->prepare($query);
-        $this->id=htmlspecialchars(strip_tags($this->id));
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(':createdFromId', $createdFromId);
+        $stmt->execute();
+        $num = $stmt->rowCount();
+        echo "getImagesToDelete " . $num . "<br/>";
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $filepath = $this->getPathToImage($name);
+            unlink($filepath);
+        }
+    }
+
+    function getPathToImage($filename){
+        $folder =  dirname(__FILE__);
+        $currentFolder = "api" . DIRECTORY_SEPARATOR . "objects";
+        $destinationFolder = "uploads" .$filename ."";
+        $resStr = str_replace($currentFolder, $destinationFolder, $folder );
+        return $resStr;
+    }
+
+    function deleteImageFromDB($createdFromId){
+        $query = "DELETE FROM " . $this->table_name . " WHERE createdFromId = :createdFromId";
+        $stmt = $this->conn->prepare($query);
+        $this->createdFromId=htmlspecialchars(strip_tags($createdFromId));
+        $stmt->bindParam(':createdFromId', $this->createdFromId);
         if($stmt->execute()){
             return true;
         }
         return false;
     }
+
+
+
 
     public function resizeAndSave($imageFile, $productId) {
 
@@ -59,22 +90,28 @@ class Image{
         }
 
 
-        $this->saveinResolution($source_image,  $imageFile, "big", $productId);
-        $this->saveinResolution($source_image,  $imageFile, "middle", $productId);
-        $this->saveinResolution($source_image,  $imageFile, "thumbnail", $productId);
+        $createdFromId = $this->saveinResolution($source_image,  $imageFile, "big", $productId, null);
+        $this->saveinResolution($source_image,  $imageFile, "middle", $productId, $createdFromId);
+        $this->saveinResolution($source_image,  $imageFile, "thumbnail", $productId, $createdFromId);
         unlink($imageFile);
     }
 
     function saveToDB($productId){
-        $query = "INSERT INTO " . $this->table_name . " (`id`, `productId`, `name`, `usage`) VALUES (NULL, '".$productId."', '', '')";
+
+
+        $query = "INSERT INTO " . $this->table_name . " (`id`, `productId`) VALUES (NULL, '".$productId."')";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $last_id = $this->conn->lastInsertId();
         return $last_id;
     }
 
-    function saveinResolution($source_image, $oldFilename,  $typeFolder,  $productId){
+    function saveinResolution($source_image, $oldFilename,  $typeFolder,  $productId, $createdFromId){
+
         $imageId = $this->saveToDB($productId);
+        if($createdFromId == null){
+            $createdFromId = $imageId;
+        }
 
         if($typeFolder == "big"){
             $dest_imagex = 1200;
@@ -100,7 +137,8 @@ class Image{
             $filename = $this->getPathFileName( $typeFolder, ".jpg", $productId, $imageId);
             imagejpeg($dest_image, $filename,100);
         }
-        $this->updateFilename($imageId, $filename);
+        $this->updateFilename($imageId, $filename,  $createdFromId);
+        return $createdFromId;
     }
 
     function getPathFileName($typeFolder, $fileExtension, $productId, $imageId){
@@ -112,15 +150,18 @@ class Image{
         return $resStr;
     }
 
-    function updateFilename($lastId, $pathFileName){
+    function updateFilename($lastId, $pathFileName,  $createdFromId){
         $postion = strrpos($pathFileName, 'uploads', 0);
         $path = substr($pathFileName, $postion);
         $filename = str_replace("uploads", "", $path);
-        $query = "UPDATE " . $this->table_name . " SET name = :name WHERE id = :id";
+
+        $query = "UPDATE " . $this->table_name . " SET name = :name, createdFromId = :createdFromId WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $this->id=htmlspecialchars(strip_tags($lastId));
         $this->name=htmlspecialchars(strip_tags($filename));
+        $this->createdFromId=htmlspecialchars(strip_tags($createdFromId));
         $stmt->bindParam(':name', $this->name);
+        $stmt->bindParam(':createdFromId', $this->createdFromId);
         $stmt->bindParam(':id', $this->id);
 
         if($stmt->execute()){

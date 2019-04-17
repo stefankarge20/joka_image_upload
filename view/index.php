@@ -76,15 +76,15 @@
                                     </div>
                                     <div class="row border-bottom border-right border-left">
                                         <div class="col-md-10">
-                                            <select v-model="usage" class="form-control" style="height: 35px" @click="changeImageUsage(articleId, image.id, usage)">
-                                                <option>Frontbild</option>
-                                                <option>Text-Zeichnung</option>
-                                                <option>Verpackung</option>
-                                                <option>anderes</option>
+                                            <select v-model="image.usageFor" class="form-control" style="height: 35px" @change="changeImageUsage(image)">
+                                                <option value="Frontbild">Frontbild</option>
+                                                <option value="Text-Zeichnung">Text-Zeichnung</option>
+                                                <option value="Verpackung">Verpackung</option>
+                                                <option value="anderes">anderes</option>
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary pull-right" @click="deleteImage(articleId, image.id)">
+                                            <button class="btn btn-primary pull-right" @click="deleteImage(image)">
                                                 <span class="glyphicon glyphicon-trash"></span>
                                             </button>
                                         </div>
