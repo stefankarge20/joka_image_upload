@@ -6,7 +6,8 @@ include_once '../objects/image.php';
 
 define ('SITE_ROOT', realpath(dirname(__FILE__)));
 $target_dir = SITE_ROOT.DIRECTORY_SEPARATOR."tempDirectory".DIRECTORY_SEPARATOR;
-$productId = $_POST["productId"];
+$productIds= $_POST["productIds"];
+$usageFor= $_POST["usageFor"];
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -46,9 +47,19 @@ if ($uploadOk == 0) {
         $database = new Database();
         $db = $database->getConnection();
         $image = new Image($db);
-        $image->resizeAndSave($target_file, $productId);
-        header("Location: /joka/view/index.php");
-        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        $array = explode(",", $productIds);
+        $imageFile = null;
+        for($i = 0; $i < count($array); ++$i) {
+            $productId =  $array[$i];
+            $imageFile = $image->resizeAndSave($target_file, $productId, $usageFor);
+        }
+
+        if($imageFile != null) {
+            unlink($imageFile);
+        }
+        unset($_POST);
+        header("Location: /joka/view/index.php?articleIds=".$productIds);
+//        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded with usage: " . $usageFor;
     } else {
         echo "Sorry, there was an error uploading your file.";
     }

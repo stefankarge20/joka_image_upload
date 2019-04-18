@@ -2,14 +2,16 @@ const urlArticles = "/joka/api/product/read.php";
 const urlCategories = "/joka/api/category/read.php";
 const urlReadCategory = "/joka/api/collection/read_category.php";
 const urlCollectionArticles = "/joka/api/product/read_collections.php";
+const urlImageUpload ="/joka/api/image/upload.php";
 const urlSearch = "/joka/api/controller/search.php";
 const urlImages = "/joka/api/image/read.php";
 const urlChangeImageUsage = "/joka/api/image/patch.php";
 const urlDeleteImageUsage = "/joka/api/image/delete.php";
 
-new Vue({
+var vm = new Vue({
     el: '#joka-demo',
     data: {
+        urlImageUpload: urlImageUpload,
         articles: [],
         categories: [],
         categoryName: "",
@@ -70,7 +72,7 @@ new Vue({
                 var images = response.data.images;
                 for(var key in images){
                     var image = images[key];
-                    image.name = "/joka/uploads/"+image.name.replace("\\\\", "/");
+                    image.name = "/joka/uploads/"+image.name.replace("\\", "/");
                     vm.currentArticleImages.add(image);
                 }
             });
@@ -81,7 +83,7 @@ new Vue({
             axios.delete(url,{})
                 .then((response) => {
                     alert("Bild erfolgreich gelöscht");
-                    console.log("delete", response);
+                    console.log( vm.currentArticleImages, image);
                     vm.currentArticleImages.delete(image);
                 }).catch(function (error) {
                     alert("Bild konnt nicht gelöscht werden: " + JSON.stringify(error));
@@ -95,6 +97,37 @@ new Vue({
                 }).catch(function (error) {
                 alert("Fehler bei Bild-Nutzung änderzun zu " + image.usageFor + ": " + JSON.stringify(error));
             });
+        },
+        getSelectedArticles: function () {
+            var set = new Set();
+            for(var key in this.searchMatches){
+                var match = this.searchMatches[key];
+                for(let selected of this.selectedProducts.keys()){
+                    if(match.productId == selected){
+                        set.add(match);
+                    }
+                }
+            }
+            return set;
+        },
+        getUploadParams: function () {
+            var articles = this.getSelectedArticles();
+            var param = "";
+            for(let article of articles.keys()){
+                param += article.productId+",";
+            }
+            if(param.endsWith(',')){
+                param = param.substring(0, param.length - 1);
+            }
+            return param;
+        },
+        selectAll: function (select) {
+           if(select){
+
+           }else{
+               this.selectedProducts.clear();
+           }
+           console.log("selectAll", select);
         }
     },
     mounted() {

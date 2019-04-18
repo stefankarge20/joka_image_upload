@@ -80,7 +80,7 @@ class Image{
 
 
 
-    public function resizeAndSave($imageFile, $productId) {
+    public function resizeAndSave($imageFile, $productId, $usageFor) {
 
         $source_image = null;
         if($this->endsWith($imageFile, "png")){
@@ -90,25 +90,30 @@ class Image{
         }
 
 
-        $createdFromId = $this->saveinResolution($source_image,  $imageFile, "big", $productId, null);
-        $this->saveinResolution($source_image,  $imageFile, "middle", $productId, $createdFromId);
-        $this->saveinResolution($source_image,  $imageFile, "thumbnail", $productId, $createdFromId);
-        unlink($imageFile);
+        $createdFromId = $this->saveinResolution($source_image,  $imageFile, "big", $productId, null, $usageFor);
+        $this->saveinResolution($source_image,  $imageFile, "middle", $productId, $createdFromId, $usageFor);
+        $this->saveinResolution($source_image,  $imageFile, "thumbnail", $productId, $createdFromId, $usageFor);
+        return $imageFile;
     }
 
-    function saveToDB($productId){
+    function saveToDB($productId, $usageFor){
 
 
-        $query = "INSERT INTO " . $this->table_name . " (`id`, `productId`) VALUES (NULL, '".$productId."')";
+        $query = "INSERT INTO " . $this->table_name . " (`id`, `productId`, `usageFor`) VALUES (NULL, :productId, :usageFor)";
         $stmt = $this->conn->prepare($query);
+        $this->productId=htmlspecialchars(strip_tags($productId));
+        $this->usageFor=htmlspecialchars(strip_tags($usageFor));
+        $stmt->bindParam(':productId', $this->productId);
+        $stmt->bindParam(':usageFor', $this->usageFor);
+
         $stmt->execute();
         $last_id = $this->conn->lastInsertId();
         return $last_id;
     }
 
-    function saveinResolution($source_image, $oldFilename,  $typeFolder,  $productId, $createdFromId){
+    function saveinResolution($source_image, $oldFilename,  $typeFolder,  $productId, $createdFromId, $usageFor){
 
-        $imageId = $this->saveToDB($productId);
+        $imageId = $this->saveToDB($productId, $usageFor);
         if($createdFromId == null){
             $createdFromId = $imageId;
         }

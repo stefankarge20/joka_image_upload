@@ -1,10 +1,10 @@
-Vue.component('tree-item', {
+let tree = Vue.component('tree-item', {
     template: ' <li>' +
         '            <div v-bind:class="{bold: isFolder}" @click="update">' +
-        '                <span v-if="isRootOrCategory">{{ item.name }}</span>' +
-        '                <span v-if="isCollection" @click="addProductToCollection">{{ item.name }}</span>' +
-        '                <span v-if="isProduct" @click="selectItem"><input type="checkbox" v-if="isProduct" v-model="item.selected"> {{ item.name }}</span>' +
-        '                <span v-if="isFolder">[{{ isOpen ? \'-\' : \'+\' }}]</span>' +
+        '                <span v-if="isRoot || isCollection">{{ item.name }}</span>' +
+        '                <span v-if="isCategory" @click="addProductToCollection">{{ item.name }}</span>' +
+        '                <span v-if="isProduct" @click="selectItem"><input type="checkbox" v-model="item.selected"> {{ item.name }}</span>' +
+        '                <span v-if="isFolder" >[{{ isOpen ? \'-\' : \'+\' }}]</span>' +
         '            </div>' +
         '            <ul v-show="isOpen" v-if="isFolder">' +
         '                <tree-item' +
@@ -28,8 +28,11 @@ Vue.component('tree-item', {
             var folder = this.item.children && this.item.children.length;
             return folder > 0;
         },
-        isRootOrCategory: function () {
-            return this.item.type == "root" || this.item.type == "category";
+        isCategory: function () {
+            return this.item.type == "category";
+        },
+        isRoot: function () {
+            return this.item.type == "root";
         },
         isCollection: function () {
             return this.item.type == "collection";
@@ -54,20 +57,42 @@ Vue.component('tree-item', {
 
         },
         addProductToCollection: function () {
-            if(this.item.children.length > 0){
+            if(this.isOpen){
                 return;
             }
-            var url = urlCollectionArticles+"?category="+this.item.categoryid+"&collection="+this.item.collectionid;
-            var cmp = this;
-
-            axios.get(url).then(function (response) {
-                var products = response.data.products;
-                for(var key in products){
-                    var product = products[key];
-                    cmp.item.children.push({type: "product", selected: false, productId: product.id, name: product.name, children: []});
+            for(let key in this.item.children){
+                let cmp = this;
+                cmp.child = this.item.children[key];
+                if (typeof cmp.child.categoryid === 'undefined') {
+                    continue;
                 }
-            }).catch(function (error) {
-            });
+
+                var url = urlCollectionArticles+"?category="+cmp.child.categoryid+"&collection="+cmp.child.collectionid;
+                axios.get(url).then(function (response) {
+                    var products = response.data.products;
+                    for(var key2 in products){
+                        var product = products[key2];
+                        var contains = cmp.contains(cmp.child.children, product);
+                        if(!contains){
+                            cmp.child.children.push({type: "product", selected: false, productId: product.id, name: product.name, children: []});
+                        }
+                    }
+                }).catch(function (error) {
+                    if(error.status != 404) {
+                        console.error("addProductToCollection.error", error);
+                    }
+                });
+            }
+        },
+        contains: function (articles, article) {
+            var found = false;
+            for(var i = 0; i < articles.length; i++) {
+                if (articles[i].productId == article.id) {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
         }
     }
 });

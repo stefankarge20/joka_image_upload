@@ -1,5 +1,5 @@
 <?php include("header.php"); ?>
-    <div  id="joka-demo">
+    <div id="joka-demo">
         <div class="row">
             <div class="col-md-5 offset-md-1">
                 <div class="panel with-nav-tabs panel-default">
@@ -11,14 +11,9 @@
                     </div>
                     <div class="panel-body">
                         <div class="tab-content" style="min-height: 500px">
-                            <button type="button" class="btn btn-success pull-right" @click="editArticleImage">
-                                Artikelbilder bearbeiten
-                            </button>
                             <div class="tab-pane fade in active" id="tabArticleTree">
-                                <br/>
                                 <ul id="demo">
-                                    <tree-item class="item" :item="treeData"
-                                               :selectedproducts="selectedProducts"></tree-item>
+                                    <tree-item class="item" :item="treeData" :selectedproducts="selectedProducts"></tree-item>
                                 </ul>
                             </div>
                             <div class="tab-pane fade" id="tabSearch">
@@ -29,7 +24,7 @@
                                         <div class="ui-widget">
                                             <input type="text" class="form-control" id="search"
                                                    v-on:keyup="productSearchChange()"
-                                                   placeholder="Kategorie, Kollektion, Produktname, EAN-Nummer">
+                                                   placeholder="Kategorie, Kollektion, EAN-Nummer, Produktname">
                                         </div>
                                     </div>
                                 </form>
@@ -54,55 +49,86 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                                <button class="btn btn-primary pull-right" @click="selectAll(true)">
+                                    <span class="glyphicon glyphicon-plus"></span> Alles auswählen
+                                </button>&nbsp;
+                                <button class="btn btn-primary pull-right"  @click="selectAll(false)">
+                                    <span class="glyphicon glyphicon-minus"></span> Alles abwählen
+                                </button>
+                                <div class="col-md-12">
+                                    <h3>Ausgewählte Artikel:</h3>
+                                    <ul>
+                                        <li v-for="article in getSelectedArticles()">{{article.productName}}</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <ul>
+            </ul>
             <div class="col-md-5">
                 <div class="card card-default" style="min-height: 600px">
                     <div class="card-header"><h3>Ausgewählte Bilder zu Artikel</h3></div>
                     <div class="card-body">
-                        <div class="row" v-for="articleId in selectedProducts">
+                        <div class="row" v-for="article in  getSelectedArticles()">
+                            <div class="col-md-12" style="min-height: 50px"></div>
                             <div class="col-md-12">
-                                Artikel: {{articleId}}
+                                <h4>Bilder zu Artikel: {{article.productName}}</h4>
                             </div>
-                            <div class="col-md-4" v-for="image in currentArticleImages">
-                                <div v-if="articleId==image.productId">
-                                    <div class="row border-top border-right border-left">
-                                        <div class="col-md-12">
-                                            <img v-bind:src="image.name" width="100%" height="300px"/>
-                                        </div>
+                            <div class="col-md-4" v-for="image in currentArticleImages"
+                                 v-if="article.productId==image.productId">
+                                <div class="row border-top border-right border-left">
+                                    <div class="col-md-12">
+                                        <img v-bind:src="image.name" width="100%" height="300px"/>
                                     </div>
-                                    <div class="row border-bottom border-right border-left">
-                                        <div class="col-md-10">
-                                            <select v-model="image.usageFor" class="form-control" style="height: 35px" @change="changeImageUsage(image)">
-                                                <option value="Frontbild">Frontbild</option>
-                                                <option value="Text-Zeichnung">Text-Zeichnung</option>
-                                                <option value="Verpackung">Verpackung</option>
-                                                <option value="anderes">anderes</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button class="btn btn-primary pull-right" @click="deleteImage(image)">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </div>
+                                </div>
+                                <div class="row border-bottom border-right border-left">
+                                    <div class="col-md-10">
+                                        <select v-model="image.usageFor" class="form-control" style="height: 35px"
+                                                @change="changeImageUsage(image)">
+                                            <option value="Verwendungszweck">Verwendungszweck</option>
+                                            <option value="Frontbild">Frontbild</option>
+                                            <option value="Text-Zeichnung">Text-Zeichnung</option>
+                                            <option value="Verpackung">Verpackung</option>
+                                            <option value="anderes">anderes</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-primary pull-right" @click="deleteImage(image)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <form action="/joka/api/image/upload.php" method="post" enctype="multipart/form-data" class="col-md-6">
-                            <input id="input-b1" name="fileToUpload" type="file" class="file" data-browse-on-zone-click="true">
-                            <input name="productId" type="text" hidden="hidden" value="6">
-
-                        </form>
-
-
+                        <div class="row">
+                            <div class="col-md-12" style="min-height: 75px"></div>
+                            <div class="col-md-12">
+                                <h3>Weiteres Artikelbild für folgende Artikel hochladen:</h3>
+                                <ul>
+                                    <li v-for="article in getSelectedArticles()">{{article.productName}}</li>
+                                </ul>
+                            </div>
+                            <form v-bind:action="urlImageUpload" method="post" enctype="multipart/form-data"  class="col-md-6">
+                                    <input id="input-b1" name="fileToUpload" type="file" class="file" data-browse-on-zone-click="true">
+                                    <select class="form-control" style="height: 35px" name="usageFor">
+                                        <option value="Verwendungszweck" selected="selected">Verwendungszweck</option>
+                                        <option value="Frontbild">Frontbild</option>
+                                        <option value="Text-Zeichnung">Text-Zeichnung</option>
+                                        <option value="Verpackung">Verpackung</option>
+                                        <option value="anderes">anderes</option>
+                                    </select>
+                                <input name="productIds" type="text" hidden="hidden" v-bind:value="getUploadParams()">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
+
+    </div>
     </div>
 <?php include("footer.php"); ?>
